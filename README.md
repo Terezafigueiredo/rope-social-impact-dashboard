@@ -90,7 +90,7 @@ Antes de publicar, rode os testes (só a biblioteca padrão do Python):
 python -m unittest discover -s tests -v
 ```
 
-Eles verificam que nenhum dado restrito pode ser recuperado por subtração, por inspeção do `js/dados.js` ou pelos arquivos do repositório, e que o site não carrega nenhum recurso de terceiros (scripts, estilos ou fontes).
+Eles verificam que nenhum dado restrito pode ser recuperado por subtração, por inspeção do `js/dados.js` ou pelos arquivos do repositório, e que o site não carrega nada de servidores de terceiros (scripts, estilos ou fontes).
 
 ### Testes que dependem de arquivos locais
 
