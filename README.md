@@ -59,6 +59,7 @@ js/mapa.js            contornos, marcadores, zoom e plano B em grade
 js/painel.js          cartões do painel e animações de entrada e saída
 js/app.js             orquestra indicadores, seletor e navegação
 assets/logo-rope.png  logo oficial do Instituto ROPE
+assets/fontes/        Fraunces e Nunito Sans hospedadas no site (licença SIL OFL 1.1)
 scripts/preparar_dados.py   limpeza e agregação da planilha
 scripts/privacidade.py      regras de privacidade aplicadas antes de publicar
 scripts/parceiros_autorizados.txt   instituições que podem aparecer pelo nome
@@ -89,7 +90,21 @@ Antes de publicar, rode os testes (só a biblioteca padrão do Python):
 python -m unittest discover -s tests -v
 ```
 
-Eles verificam que nenhum dado restrito pode ser recuperado por subtração, por inspeção do `js/dados.js` ou pelos arquivos do repositório, e que o site não carrega scripts de terceiros.
+Eles verificam que nenhum dado restrito pode ser recuperado por subtração, por inspeção do `js/dados.js` ou pelos arquivos do repositório, e que o site não carrega nenhum recurso de terceiros (scripts, estilos ou fontes).
+
+### Testes que dependem de arquivos locais
+
+Dois testes usam arquivos confidenciais que ficam fora do Git. Quando o arquivo não está na máquina, o teste aparece como **pulado** (`skipped`), e não como aprovado:
+
+| Teste | Arquivo local | O que verifica |
+|---|---|---|
+| `test_palavras_chave_locais_nao_vazam_para_arquivos_publicos` | `scripts/regras_classificacao.json` | Nenhuma palavra-chave real aparece em arquivos públicos |
+| `test_nomes_de_pessoas_fisicas_nao_aparecem` | `scripts/indicacoes_individuais.txt` | Nenhum nome de quem indicou um sonho aparece em arquivos públicos |
+
+Registro da validação de 07/11/2026, antes da publicação:
+
+- **Palavras-chave locais:** executado com o arquivo real e aprovado. A mesma verificação também cobriu todo o histórico de commits.
+- **Nomes de pessoas físicas:** **não executado**, porque o arquivo original não estava disponível. Nenhum arquivo fictício foi usado no lugar dele. Proteções que continuam valendo: o `js/dados.js` só pode conter os parceiros de `scripts/parceiros_autorizados.txt` e os rótulos "Indicação individual" e "Outras origens", e o teste de vocabulário reprova qualquer outro texto.
 
 A publicação no GitHub Pages é feita por `.github/workflows/publicar.yml`: os testes rodam primeiro, e só os arquivos do site (`index.html`, `css/`, `js/`, `assets/`) vão para o ar.
 
@@ -107,4 +122,4 @@ HTML, CSS e JavaScript puros (sem frameworks) · SVG · Canvas · Web Animations
 [github.com/Terezafigueiredo](https://github.com/Terezafigueiredo)
 
 ---
-Contornos dos estados: [Malha territorial do IBGE](https://servicodados.ibge.gov.br/api/docs/malhas) (API de Malhas, qualidade mínima, 27 UFs). Logo: Instituto ROPE.
+Contornos dos estados: [Malha territorial do IBGE](https://servicodados.ibge.gov.br/api/docs/malhas) (API de Malhas, qualidade mínima, 27 UFs). Logo: Instituto ROPE. Fontes: [Fraunces](https://github.com/undercasetype/Fraunces) e [Nunito Sans](https://github.com/Fonthausen/NunitoSans), sob a SIL Open Font License 1.1.
