@@ -1,0 +1,73 @@
+{
+  "_aviso": "MODELO PÚBLICO. Copie para scripts/regras_classificacao.json (fora do Git) e preencha com as palavras-chave reais. Não publique as palavras reais: elas vêm das descrições e diagnósticos da planilha.",
+  "uf": [
+    {
+      "uf": "SP",
+      "contem": [
+        "sao paulo"
+      ]
+    }
+  ],
+  "uf_padrao": null,
+  "parceiros": [
+    {
+      "nome": "INCA",
+      "comeca": [
+        "inca"
+      ]
+    },
+    {
+      "nome": "Indicação individual",
+      "comeca": [
+        "avulso"
+      ],
+      "igual": [
+        "particular",
+        "site",
+        ""
+      ],
+      "pessoas": true
+    }
+  ],
+  "tipos": [
+    {
+      "nome": "Mensagem de ídolo",
+      "contem": [
+        "mensag",
+        "video"
+      ]
+    },
+    {
+      "nome": "Passeio",
+      "contem": [
+        "passeio",
+        "praia"
+      ]
+    }
+  ],
+  "tipo_padrao": "Presentes e outros",
+  "saude": [
+    {
+      "nome": "Câncer",
+      "contem": [
+        "cancer",
+        "tumor"
+      ]
+    },
+    {
+      "nome": "Neurológica",
+      "regex": "\\b(avc)\\b",
+      "contem": [
+        "neurol"
+      ]
+    }
+  ],
+  "saude_padrao": "Outras",
+  "uf_por_origem": {
+    "RJ": [
+      "INCA",
+      "Indicação individual"
+    ]
+  },
+  "_aviso_uf": "uf_por_origem: origens (já normalizadas por \"parceiros\") atribuídas a cada UF. Origem fora das listas = sem estado identificado."
+}

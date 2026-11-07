@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa dos Sonhos Realizados · Instituto ROPE</title>
+<meta name="description" content="Dashboard interativo com o impacto do Instituto ROPE: sonhos realizados por estado, por ano e por tipo, em todo o Brasil.">
+<meta name="theme-color" content="#170B2B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+<a class="pular" href="#mapa-titulo">Pular para o mapa</a>
+
+<!-- Ambiente decorativo: céu, estrelas, partículas e nuvens -->
+<div class="ceu" aria-hidden="true">
+  <canvas id="estrelas"></canvas>
+  <div class="nuvem nuvem--topo"></div>
+  <div class="nuvem nuvem--esq"></div>
+  <div class="nuvem nuvem--dir"></div>
+</div>
+
+<header class="topo">
+  <div class="topo__logo">
+    <img src="assets/logo-rope.png" width="540" height="414" alt="Instituto ROPE · realiza sonhos">
+  </div>
+  <div class="topo__texto">
+    <h1>Mapa dos <span>Sonhos Realizados</span></h1>
+    <p>Acompanhe o impacto do Instituto ROPE na vida de pessoas e famílias em todo o Brasil.</p>
+  </div>
+  <svg class="topo__coracao" viewBox="0 0 220 180" aria-hidden="true" focusable="false">
+    <defs><filter id="brilho-coracao" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <path pathLength="1" d="M8 170 C 60 160, 90 150, 110 128 C 60 92, 40 64, 52 38 C 64 12, 100 14, 110 44 C 120 14, 156 12, 168 38 C 180 64, 160 92, 110 128" />
+  </svg>
+  <button class="botao-movimento" id="botao-movimento" type="button" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg><span>Pausar animações</span>
+  </button>
+</header>
+
+<section class="kpis" aria-label="Indicadores de impacto">
+  <article class="kpi">
+    <svg class="kpi__icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+    <div><strong class="kpi__num" data-kpi="sonhos">—</strong><span>Sonhos realizados</span></div>
+  </article>
+  <article class="kpi">
+    <svg class="kpi__icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>
+    <div><strong class="kpi__num" data-kpi="estados">—</strong><span>Estados atendidos</span></div>
+  </article>
+  <article class="kpi">
+    <svg class="kpi__icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><circle cx="5.5" cy="10" r="2.2"/><circle cx="18.5" cy="10" r="2.2"/><path d="M6.5 19a5.5 5.5 0 0 1 11 0M1.8 18a3.8 3.8 0 0 1 4.6-3.6M22.2 18a3.8 3.8 0 0 0-4.6-3.6"/></svg>
+    <div><strong class="kpi__num" data-kpi="pessoas">—</strong><span>Pessoas impactadas<sup><a href="#nota-pessoas" aria-label="Ver nota sobre pessoas impactadas">*</a></sup></span></div>
+  </article>
+  <article class="kpi">
+    <svg class="kpi__icone" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+    <div><strong class="kpi__num" data-kpi="periodo">—</strong><span>Período registrado</span></div>
+  </article>
+</section>
+
+<main class="grade">
+  <section class="mapa-area" aria-labelledby="mapa-titulo">
+    <div class="mapa-caixa">
+      <h2 id="mapa-titulo" class="sr-only" tabindex="-1">Mapa interativo dos sonhos realizados por estado</h2>
+      <svg id="mapa" role="group" aria-label="Mapa do Brasil. Estados com sonhos registrados podem ser selecionados.">
+        <defs>
+          <filter id="brilho-mapa" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="6"/></filter>
+          <linearGradient id="grad-ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFDF8F"/><stop offset="1" stop-color="#E2A83A"/></linearGradient>
+          <linearGradient id="grad-selecionado" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFDF8F"/><stop offset="1" stop-color="#F0C35A"/></linearGradient>
+        </defs>
+        <g id="zoom"></g>
+      </svg>
+      <p class="dica" id="dica">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-.5V4a1.5 1.5 0 0 1 3 0v6m0-1a1.5 1.5 0 0 1 3 0v4.5c0 4-2.5 7-6.5 7S6 18 4.8 15.6l-1.6-3a1.5 1.5 0 0 1 2.6-1.5L7.5 13"/></svg>
+        <span>Clique em um estado destacado para ver os detalhes</span>
+      </p>
+      <p class="mapa-status" id="mapa-status" role="status"></p>
+    </div>
+    <nav class="seletor" aria-label="Escolher estado">
+      <span class="seletor__rotulo" id="seletor-rotulo">Estados com sonhos:</span>
+      <ul id="seletor-lista" aria-labelledby="seletor-rotulo"></ul>
+    </nav>
+    <section class="cartao anos" aria-labelledby="anos-titulo">
+      <h3 id="anos-titulo" class="cartao__titulo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-6M10 20V9M15 20v-8M20 20V4"/></svg><span>Sonhos por ano <small id="anos-escopo">· Brasil</small></span></h3>
+      <div id="grafico-anos" class="colunas"></div>
+      <p class="nota" id="anos-nota"></p>
+    </section>
+  </section>
+
+  <aside class="painel" id="painel" aria-labelledby="painel-titulo">
+    <div class="painel__cabeca">
+      <h2 id="painel-titulo" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg><span id="painel-nome">Brasil</span></h2>
+      <button class="botao-voltar" id="botao-voltar" type="button" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Voltar ao Brasil
+      </button>
+    </div>
+    <div class="painel__cartoes" id="cartoes" aria-live="polite"></div>
+  </aside>
+</main>
+
+<footer class="rodape">
+  <div class="rodape__faixa">
+    <ul class="conceitos">
+      <li><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 15s-5-3-5-7a2.8 2.8 0 0 1 5-1.7A2.8 2.8 0 0 1 21 8c0 4-5 7-5 7z"/><path d="M3 18l5 6c1.5 1.8 3.5 2.5 6 2.5h5M29 18l-5 6c-1.5 1.8-3.5 2.5-6 2.5M8 24l4-4.5c1-1 2.5-1 3.5 0M24 24l-4-4.5c-1-1-2.5-1-3.5 0"/></svg><span>Acolhimento<br>e esperança</span></li>
+      <li><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4l3.6 7.6 8.2 1-6 5.7 1.6 8.2L16 22.5l-7.4 4 1.6-8.2-6-5.7 8.2-1z"/></svg><span>Realização<br>de sonhos</span></li>
+      <li><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="10" r="4"/><circle cx="7" cy="13" r="3"/><circle cx="25" cy="13" r="3"/><path d="M8.5 26a7.5 7.5 0 0 1 15 0M2 24.5a5.2 5.2 0 0 1 6.4-5M30 24.5a5.2 5.2 0 0 0-6.4-5"/></svg><span>Impacto<br>social</span></li>
+    </ul>
+    <a class="botao-ouro" href="https://www.institutorope.com.br/" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>
+      Conheça o Instituto ROPE
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+      <span class="sr-only">(abre em nova aba)</span>
+    </a>
+  </div>
+  <div class="rodape__notas">
+    <p id="nota-pessoas"></p>
+    <p>Somente dados agregados. Estados com menos de <span id="nota-limite">10</span> sonhos mostram <span id="nota-restritos">apenas o total</span>, e grupos com menos de <span id="nota-celula">5</span> pessoas aparecem somados em “outros”. Os detalhes do Brasil somam apenas os estados detalhados, para que nada possa ser deduzido por subtração. O estado de cada sonho é atribuído pela instituição que o indicou.</p>
+    <p class="autoria">Dashboard desenvolvido por <a href="https://github.com/Terezafigueiredo" target="_blank" rel="noopener noreferrer">Tereza Figueiredo</a> · <span id="credito-mapa"></span></p>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+<script src="js/dados.js"></script>
+<script src="js/mapa-ufs.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/efeitos.js"></script>
+<script src="js/graficos.js"></script>
+<script src="js/mapa.js"></script>
+<script src="js/painel.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

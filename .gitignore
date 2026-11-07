@@ -1,0 +1,10 @@
+*.xlsx
+*.xls
+*.csv
+dados.json
+__pycache__/
+scripts/indicacoes_individuais.txt
+# Palavras-chave de classificação: derivadas das descrições e diagnósticos reais
+scripts/regras_classificacao.json
+# Rascunhos de geração (escrita atômica)
+*.tmp
