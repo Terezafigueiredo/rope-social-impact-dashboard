@@ -316,6 +316,29 @@ class B_ArquivosDoRepositorio(unittest.TestCase):
         self.assertRegex(t, r'needs:\s*testes', 'deploy precisa depender dos testes')
         self.assertNotRegex(t, r'cp -r[^\n]*(scripts|tests)', 'scripts e testes não podem ir para o site')
 
+    def test_site_nao_carrega_recursos_de_terceiros(self):
+        """Fontes, estilos e imagens vêm do próprio site: nenhum visitante é exposto a servidores externos."""
+        html = (RAIZ / 'index.html').read_text(encoding='utf-8')
+        externos = re.findall(r'<(?:link|img|source|iframe|video|audio)\b[^>]*(?:href|src)="((?:https?:)?//[^"]+)"', html)
+        self.assertEqual(externos, [], 'recurso externo no HTML')
+        for css in (RAIZ / 'css').glob('*.css'):
+            t = css.read_text(encoding='utf-8')
+            self.assertEqual(re.findall(r'url\(\s*["\']?((?:https?:)?//[^)"\']+)', t) + re.findall(r'@import', t), [],
+                             f'{css.name}: recurso externo')
+
+    def test_fontes_locais_existem_e_tem_licenca(self):
+        css = '\n'.join(p.read_text(encoding='utf-8') for p in (RAIZ / 'css').glob('*.css'))
+        fontes = re.findall(r'url\(\.\./(assets/fontes/[^)]+\.woff2)\)', css)
+        self.assertTrue(fontes, 'nenhuma fonte local declarada')
+        for f in fontes:
+            arq = RAIZ / f
+            self.assertTrue(arq.exists(), f'fonte ausente: {f}')
+            self.assertEqual(arq.read_bytes()[:4], b'wOF2', f'{f} não é WOFF2')
+        licencas = list((RAIZ / 'assets' / 'fontes').glob('OFL-*.txt'))
+        self.assertEqual(len(licencas), len(set(fontes)), 'cada fonte precisa do seu arquivo de licença')
+        for lic in licencas:
+            self.assertIn('SIL Open Font License', lic.read_text(encoding='utf-8'))
+
     def test_job_de_publicacao_tem_as_permissoes_necessarias(self):
         """As permissões de um job substituem as do workflow; sem contents: read o checkout falha."""
         wf = RAIZ / '.github' / 'workflows' / 'publicar.yml'
@@ -584,6 +607,12 @@ class D_Interface(unittest.TestCase):
     def test_esc_fecha_tooltip(self):
         js = (RAIZ / 'js' / 'app.js').read_text(encoding='utf-8')
         self.assertRegex(js, r"key === 'Escape'\)\s*\{\s*R\.esconderTooltip\(\)")
+
+    def test_painel_cita_todas_as_instituicoes_publicadas(self):
+        """As 5 primeiras viram barras; as demais instituições autorizadas aparecem na linha "Também"."""
+        js = (RAIZ / 'js' / 'painel.js').read_text(encoding='utf-8')
+        self.assertRegex(js, r'instituicoes\.slice\(0, 5\)')
+        self.assertRegex(js, r'instituicoes\.slice\(5\)\.map')
 
 
 if __name__ == '__main__':

@@ -1,4 +1,10 @@
 /* ============ Mapa dos Sonhos Realizados · Instituto ROPE ============ */
+/* Fontes hospedadas no próprio site (SIL Open Font License 1.1; licenças em assets/fontes/OFL-*.txt).
+   Subconjunto latino, que cobre o português. Nenhuma requisição a servidores de terceiros. */
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url(../assets/fontes/fraunces-latin-opsz-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito Sans';font-style:normal;font-weight:200 1000;font-display:swap;
+  src:url(../assets/fontes/nunito-sans-latin-wght-normal.woff2) format('woff2')}
 :root{
   --roxo-profundo:#170B2B; --roxo:#2A1450; --roxo-luz:#9A6BE0; --lilas:#C9A2FF;
   --ouro:#F0C35A; --ouro-claro:#FFDF8F; --branco:#F6F0FF;
@@ -69,6 +75,9 @@ a{color:var(--ouro-claro)}
 .kpi strong{display:block;font:600 clamp(28px,3vw,40px)/1 var(--serif);color:var(--ouro-claro);font-variant-numeric:tabular-nums;white-space:nowrap}
 .kpi span{display:block;margin-top:6px;font-size:15px;color:var(--texto-suave)}
 .kpi sup a{color:var(--ouro);text-decoration:none;font-weight:800;padding:0 3px}
+/* Área de toque de 24×24 px (WCAG 2.5.8). Em elemento inline, o padding vertical não altera a altura
+   da linha, e as margens negativas devolvem o espaço horizontal extra: o "*" fica onde estava. */
+.kpi sup a{padding:5px 9.5px;margin:0 -6.5px}
 
 /* ---------- grade principal ---------- */
 .grade{max-width:1320px;margin:22px auto 0;padding:0 32px;display:grid;grid-template-columns:minmax(0,1fr) minmax(400px,560px);gap:22px;align-items:start}
@@ -222,7 +231,7 @@ html.sem-movimento .topo__coracao path{stroke-dashoffset:0}
   .painel__cartoes{grid-template-columns:1fr}
   .colunas{height:150px}
   .coluna__valor{font-size:12px}
-  .coluna__ano{font-size:10.5px}
+  .coluna__ano{font-size:12px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:var(--branco)}
   .rodape__faixa{padding:18px;justify-content:center}
   .conceitos{justify-content:center;gap:10px 0}
   .conceitos li{padding:4px 12px;font-size:14px;gap:8px}

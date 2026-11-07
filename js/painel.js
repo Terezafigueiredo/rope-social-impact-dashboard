@@ -75,6 +75,7 @@
     c.push(`<section class="cartao cartao--largo">${titulo('maos', `Instituições parceiras <small>· ${ehBrasil ? 'Brasil' : chave}</small>`)}
       <div class="par" style="margin-bottom:12px"><div><strong>${R.fmt(d.partnersN)}</strong><span>instituições indicaram sonhos</span></div></div>
       ${instituicoes.length ? G.barras(instituicoes.slice(0, 5), totParc, {descricao: `Instituições que mais indicaram sonhos ${nomeCurto}`, ouro: true}) : ''}
+      ${instituicoes.length > 5 ? `<p class="nota">Também: ${instituicoes.slice(5).map(([n, v]) => `${R.esc(n)} (<b>${v}</b>)`).join(', ')}.</p>` : ''}
       ${individuais ? `<p class="nota">Outros <b>${individuais}</b> sonhos vieram de indicações individuais.</p>` : ''}
       ${outras ? `<p class="nota"><b>${outras}</b> ${outras === 1 ? 'sonho veio' : 'sonhos vieram'} de outras origens, que não são citadas pelo nome.</p>` : ''}</section>`);
 
