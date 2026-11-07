@@ -31,7 +31,9 @@ jobs:
     needs: testes
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # As permissões do job substituem as do topo: contents: read é necessário para o checkout.
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:

@@ -1,11 +1,13 @@
-# PROPOSTA: aguarda aprovação por escrito do Instituto ROPE antes de publicar.
+# AUTORIZADA: divulgação pública dos nomes confirmada pelo Instituto ROPE
+# (confirmação registrada pela responsável do projeto em 2026-11-07).
+# Inclua um nome novo somente depois de nova autorização do Instituto.
 #
 # Somente os nomes desta lista aparecem no dashboard. Qualquer outra origem
 # (instituição fora da lista, cidade, sigla não identificada ou pessoa física)
 # é somada em "Outras origens". Escreva o nome exatamente como sai da função
 # partner() em scripts/preparar_dados.py. Um nome por linha.
 #
-# Critérios desta proposta:
+# Critérios da lista:
 #   1. é uma organização (não uma cidade, pessoa ou grupo informal);
 #   2. tem 5 ou mais indicações num estado com detalhamento publicado.
 # Mesmo atendendo aos critérios, cada parceiro deve concordar em ser citado.

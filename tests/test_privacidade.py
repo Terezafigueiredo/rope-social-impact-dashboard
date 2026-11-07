@@ -316,6 +316,18 @@ class B_ArquivosDoRepositorio(unittest.TestCase):
         self.assertRegex(t, r'needs:\s*testes', 'deploy precisa depender dos testes')
         self.assertNotRegex(t, r'cp -r[^\n]*(scripts|tests)', 'scripts e testes não podem ir para o site')
 
+    def test_job_de_publicacao_tem_as_permissoes_necessarias(self):
+        """As permissões de um job substituem as do workflow; sem contents: read o checkout falha."""
+        wf = RAIZ / '.github' / 'workflows' / 'publicar.yml'
+        if not wf.exists():
+            self.skipTest('sem workflow de publicação')
+        job = re.search(r'\n  publicar:\n(.*?)(?=\n  \S|\Z)', wf.read_text(encoding='utf-8'), re.S)
+        self.assertIsNotNone(job, 'job "publicar" não encontrado')
+        bloco = re.search(r'\n    permissions:\n((?:      .*\n)+)', job.group(1) + '\n')
+        self.assertIsNotNone(bloco, 'job "publicar" precisa declarar as próprias permissões')
+        perms = dict(re.findall(r'^\s+([\w-]+):\s*(\w+)', bloco.group(1), re.M))
+        self.assertEqual(perms, {'contents': 'read', 'pages': 'write', 'id-token': 'write'})
+
 
 def grupo(total, **kw):
     """Agregado interno FICTÍCIO para testes (contagens simples)."""
